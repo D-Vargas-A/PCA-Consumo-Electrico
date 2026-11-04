@@ -1,0 +1,83 @@
+\begin{frame}{Datos: carga agregada de UCI como sustituto de un campus}
+    \begin{itemize}
+        \item \textbf{Fuente:} ElectricityLoadDiagrams20112014 [15], 370 clientes con mediciones cada 15 minutos. Se usó en lugar de UNICON porque no se logró aislar los datos de un campus: el archivo de metadatos no traía el nombre del campus y el identificador numérico no cruzó con los registros de los edificios.
+        \item \textbf{Matriz $\mathbf{X}$:} carga total sumada de los clientes; $n=1460$ días y 96 franjas de consumo, más el indicador de fin de semana.
+        \item \textbf{Contexto:} el conjunto no trae variables meteorológicas, por lo que el único contexto es el tipo de día.
+        \item \textbf{Preprocesamiento:} descarte de días incompletos y estandarización (media 0, desviación 1) por columna.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Un solo componente basta para explicar la variabilidad diaria}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item Se retuvo el mínimo de componentes que explica al menos el 90\,\% de la varianza.
+                \item Resultó $k=1$: PC1 explica el 92{,}71\,\%.
+                \item Con $k=1$, $T^2$ equivale a la distancia estandarizada sobre PC1.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{figure}
+                \centering
+                \includegraphics[width=\textwidth]{figuras/varianza_explicada.png}
+                \caption{Varianza explicada acumulada}
+            \end{figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{PCA y la línea base casi no coinciden}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item \textbf{PCA, percentil 99:} 15 días sobre el umbral de $T^2$ y 15 sobre el de SPE (30 días atípicos distintos). Esa cantidad la fija el umbral: cerca del 1\,\% por estadístico.
+                \item \textbf{Línea base ($|z|>3$):} 1 día marcado.
+                \item \textbf{Coincidencia:} 1 día de los 30, es decir, baja.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{figure}
+                \centering
+                \includegraphics[width=\textwidth]{figuras/estadisticos_t2_spe.png}
+                \caption{Estadísticos $T^2$ y SPE}
+            \end{figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Los días atípicos se alejan del grupo principal en PC1 y PC2}
+    \begin{columns}
+        \begin{column}{0.55\textwidth}
+            \small % Reduce el tamaño de letra para que encaje
+            \begin{itemize}
+                \item Los días atípicos (en rojo) quedan alejados de la nube principal. Es esperable, porque el umbral se definió sobre estas mismas puntuaciones.
+                \item PC1 captura la magnitud global del consumo diario (la demanda base agregada), mientras que PC2 refleja variaciones en la forma del perfil de carga, como desfases en los picos de consumo.
+                \item Las anomalías en SPE coinciden con los cambios de horario europeo (marzo y octubre), y las desviaciones en $T^2$ reflejan el salto de varianza provocado por la adición progresiva de clientes entre 2011 y 2014.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \begin{figure}
+                \centering
+                \includegraphics[width=\textwidth]{figuras/proyeccion_2d.png}
+                \caption{Proyección sobre PC1 y PC2}
+            \end{figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{La prueba de concepto no permite validar anomalías reales}
+    \begin{itemize}
+        \item \textbf{Sin etiquetas:} el conjunto no trae fallas ni eventos confirmados (\emph{ground truth}), por lo que no se calculan precisión ni exhaustividad.
+        \item \textbf{Validación débil:} solo se compara con una línea base, con la que coincide 1 de 30 días.
+        \item \textbf{No es un campus:} la carga agregada de 370 clientes solo sirve para verificar que el método es aplicable.
+        \item \textbf{Sin contexto meteorológico:} no se puede distinguir si un consumo atípico se explica por la temperatura.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{PCA es aplicable a estos datos; falta validarlo con UNICON}
+    \begin{itemize}
+        \item PC1 resume el 92{,}71\,\% de la variabilidad diaria con $k=1$.
+        \item $T^2$ y SPE señalan días alejados del comportamiento habitual, pero no se puede afirmar que sean anomalías reales.
+        \item \textbf{Trabajo futuro:} repetir el análisis con UNICON, incluir temperatura y humedad, distinguir anomalías de consumos explicados por el contexto y validar con eventos registrados.
+    \end{itemize}
+\end{frame}

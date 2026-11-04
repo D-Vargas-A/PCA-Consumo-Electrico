@@ -48,11 +48,11 @@
 \begin{frame}{Los días atípicos se alejan del grupo principal en PC1 y PC2}
     \begin{columns}
         \begin{column}{0.55\textwidth}
-            \small % Reduce el tamaño de letra para que encaje
+            \small
             \begin{itemize}
-                \item Los días atípicos (en rojo) quedan alejados de la nube principal. Es esperable, porque el umbral se definió sobre estas mismas puntuaciones.
-                \item PC1 captura la magnitud global del consumo diario (la demanda base agregada), mientras que PC2 refleja variaciones en la forma del perfil de carga, como desfases en los picos de consumo.
-                \item Las anomalías en SPE coinciden con los cambios de horario europeo (marzo y octubre), y las desviaciones en $T^2$ reflejan el salto de varianza provocado por la adición progresiva de clientes entre 2011 y 2014.
+                \item Los días atípicos (en rojo) quedan alejados de la nube principal, lo cual es esperable al fijar el umbral en el percentil 99 de las puntuaciones.
+                \item PC1 captura la magnitud global del consumo diario (demanda base), mientras que PC2 refleja variaciones en la forma del perfil de carga.
+                \item Algunos picos elevados en los estadísticos ocurren en fechas próximas a los cambios de horario europeo, aunque se observan otros eventos atípicos sin una correspondencia directa evidente.
             \end{itemize}
         \end{column}
         \begin{column}{0.45\textwidth}
@@ -71,6 +71,7 @@
         \item \textbf{Validación débil:} solo se compara con una línea base, con la que coincide 1 de 30 días.
         \item \textbf{No es un campus:} la carga agregada de 370 clientes solo sirve para verificar que el método es aplicable.
         \item \textbf{Sin contexto meteorológico:} no se puede distinguir si un consumo atípico se explica por la temperatura.
+        \item \textbf{Distinción pendiente:} no se aplicó la separación entre día atípico y anomalía, dado que el contexto disponible se limitó exclusivamente al tipo de día.
     \end{itemize}
 \end{frame}
 
@@ -78,6 +79,6 @@
     \begin{itemize}
         \item PC1 resume el 92{,}71\,\% de la variabilidad diaria con $k=1$.
         \item $T^2$ y SPE señalan días alejados del comportamiento habitual, pero no se puede afirmar que sean anomalías reales.
-        \item \textbf{Trabajo futuro:} repetir el análisis con UNICON, incluir temperatura y humedad, distinguir anomalías de consumos explicados por el contexto y validar con eventos registrados.
+        \item \textbf{Trabajo futuro:} resolver el cruce de metadatos de UNICON y repetir el análisis con un campus real, incluir temperatura y humedad, distinguir formalmente anomalías de consumos explicados por el contexto y validar con eventos registrados.
     \end{itemize}
 \end{frame}
